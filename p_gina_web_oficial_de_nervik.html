@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervik | Creador de Contenido Super Bear Adventure</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            base: '#120024',
+                            dark: '#0a0014',
+                            glow: '#8A2BE2',
+                            bright: '#9932CC',
+                            deep: '#4B0082',
+                            light: '#d8b4fe'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        game: ['Fredoka', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #080010;
+            color: #f3e8ff;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Particles Canvas Background */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Neon & Glassmorphism Styling */
+        .glass-panel {
+            background: rgba(18, 0, 36, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(26, 5, 48, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(153, 50, 204, 0.25);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(153, 50, 204, 0.8);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 12px 35px -10px rgba(138, 43, 226, 0.5);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 15px rgba(153, 50, 204, 0.9), 0 0 30px rgba(138, 43, 226, 0.5);
+        }
+
+        .border-glow {
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+        }
+
+        .avatar-glow {
+            box-shadow: 0 0 35px rgba(153, 50, 204, 0.6);
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 25px rgba(138, 43, 226, 0.5); }
+            100% { box-shadow: 0 0 45px rgba(153, 50, 204, 0.85); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080010;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B0082;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8A2BE2;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-purple-600 selection:text-white">
+
+    <!-- Background Canvas for Particles and Fog -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-purple-800/40 px-4 md:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#inicio" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full border-2 border-purple-glow p-0.5 bg-purple-base flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                    <!-- SVG Vector Avatar Emblem for Nervik Logo -->
+                    <svg class="w-full h-full text-purple-glow" viewBox="0 0 100 100" fill="none">
+                        <circle cx="50" cy="50" r="48" fill="#120024" stroke="#8A2BE2" stroke-width="4"/>
+                        <circle cx="30" cy="30" r="14" fill="#9932CC"/>
+                        <circle cx="70" cy="30" r="14" fill="#9932CC"/>
+                        <rect x="25" y="42" width="50" height="16" rx="8" fill="#4B0082"/>
+                        <circle cx="40" cy="50" r="4" fill="#ffffff"/>
+                        <circle cx="60" cy="50" r="4" fill="#ffffff"/>
+                        <path d="M 20 62 Q 50 82 80 62 L 70 75 Q 50 88 30 75 Z" fill="#9932CC"/>
+                    </svg>
+                </div>
+                <span class="font-game text-2xl font-bold tracking-wider text-white group-hover:text-purple-light transition-colors flex items-center gap-1.5">
+                    NERVIK
+                    <i class="fa-solid fa-circle-check text-purple-bright text-lg" title="Verificado"></i>
+                </span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <div class="hidden lg:flex items-center gap-6 font-medium text-sm tracking-wide">
+                <a href="#inicio" class="hover:text-purple-light transition-colors py-1">Inicio</a>
+                <a href="#cifras" class="hover:text-purple-light transition-colors py-1">Cifras</a>
+                <a href="#videos" class="hover:text-purple-light transition-colors py-1">Vídeos</a>
+                <a href="#contenido" class="hover:text-purple-light transition-colors py-1">Contenido</a>
+                <a href="#sobre-mi" class="hover:text-purple-light transition-colors py-1">Sobre Mí</a>
+                <a href="#proyectos" class="hover:text-purple-light transition-colors py-1">Proyectos</a>
+                <a href="#amigos" class="hover:text-purple-light transition-colors py-1">Amigos</a>
+                <a href="#contacto" class="px-5 py-2 rounded-full bg-gradient-to-r from-purple-glow to-purple-bright hover:from-purple-bright hover:to-purple-glow text-white font-semibold transition-all shadow-lg shadow-purple-glow/30">
+                    Contacto
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Toggle Button -->
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-purple-light focus:outline-none p-1">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Container -->
+        <div id="mobile-menu" class="hidden lg:hidden flex-col gap-3 pt-4 pb-2 px-3 border-t border-purple-800/40 mt-3 font-medium text-center">
+            <a href="#inicio" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Inicio</a>
+            <a href="#cifras" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Cifras</a>
+            <a href="#videos" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Vídeos</a>
+            <a href="#contenido" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Contenido</a>
+            <a href="#sobre-mi" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Sobre Mí</a>
+            <a href="#proyectos" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Proyectos</a>
+            <a href="#amigos" class="mobile-link py-2 rounded-lg hover:bg-purple-900/40">Amigos</a>
+            <a href="#contacto" class="mobile-link py-2.5 rounded-xl bg-purple-glow text-white font-bold my-1">Contacto</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="min-h-screen pt-32 pb-16 flex items-center justify-center relative px-4">
+        <div class="max-w-4xl mx-auto text-center flex flex-col items-center">
+            
+            <!-- Hero Avatar Container with High-Quality SVG Ninja Bear -->
+            <div class="relative mb-8 group">
+                <div class="absolute -inset-2 bg-gradient-to-r from-purple-glow via-purple-bright to-purple-deep rounded-full blur-xl opacity-80 animate-pulse"></div>
+                <div class="relative w-44 h-44 sm:w-56 sm:h-56 rounded-full border-4 border-purple-bright bg-purple-base p-2 avatar-glow flex items-center justify-center overflow-hidden">
+                    
+                    <!-- SVG Vector Avatar of Nervik (Ninja Purple Bear with Bandana & Scarf) -->
+                    <svg class="w-full h-full" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Dark Cave Background Circle inside avatar -->
+                        <circle cx="100" cy="100" r="95" fill="#120024"/>
+                        <circle cx="100" cy="100" r="90" fill="url(#cave-grad)" opacity="0.6"/>
+                        <defs>
+                            <radialGradient id="cave-grad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#9932CC"/>
+                                <stop offset="100%" stop-color="#120024"/>
+                            </radialGradient>
+                        </defs>
+
+                        <!-- Bear Ears -->
+                        <circle cx="55" cy="50" r="28" fill="#8A2BE2" stroke="#120024" stroke-width="4"/>
+                        <circle cx="55" cy="50" r="16" fill="#d8b4fe"/>
+                        <circle cx="145" cy="50" r="28" fill="#8A2BE2" stroke="#120024" stroke-width="4"/>
+                        <circle cx="145" cy="50" r="16" fill="#d8b4fe"/>
+
+                        <!-- Bear Head Outer -->
+                        <ellipse cx="100" cy="105" rx="65" ry="55" fill="#8A2BE2"/>
+                        
+                        <!-- Ninja Headband (Bandana) -->
+                        <path d="M 38 75 Q 100 65 162 75 L 165 95 Q 100 85 35 95 Z" fill="#2d0a4e" stroke="#120024" stroke-width="2"/>
+                        <!-- Ninja Emblem Plate -->
+                        <rect x="80" y="73" width="40" height="16" rx="4" fill="#9932CC" stroke="#ffffff" stroke-width="1.5"/>
+                        <circle cx="92" cy="81" r="2" fill="#ffffff"/>
+                        <circle cx="108" cy="81" r="2" fill="#ffffff"/>
+                        <path d="M 97 76 L 103 86 M 103 76 L 97 86" stroke="#ffffff" stroke-width="2"/>
+
+                        <!-- Ninja Eyes (Glow Eyes) -->
+                        <ellipse cx="75" cy="108" rx="10" ry="12" fill="#120024"/>
+                        <ellipse cx="125" cy="108" rx="10" ry="12" fill="#120024"/>
+                        <ellipse cx="75" cy="108" rx="5" ry="7" fill="#00ffff"/>
+                        <ellipse cx="125" cy="108" rx="5" ry="7" fill="#00ffff"/>
+                        <circle cx="77" cy="106" r="2" fill="#ffffff"/>
+                        <circle cx="127" cy="106" r="2" fill="#ffffff"/>
+
+                        <!-- Snout -->
+                        <ellipse cx="100" cy="122" rx="18" ry="12" fill="#d8b4fe"/>
+                        <ellipse cx="100" cy="117" rx="7" ry="5" fill="#120024"/>
+
+                        <!-- Yellow/Orange Scarf -->
+                        <path d="M 45 142 Q 100 162 155 142 L 165 165 Q 100 188 35 165 Z" fill="#ff9900" stroke="#120024" stroke-width="3"/>
+                        <path d="M 135 155 L 160 190 L 140 195 L 125 160 Z" fill="#e68a00"/>
+                    </svg>
+
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-purple-glow text-white w-10 h-10 rounded-full border-2 border-white flex items-center justify-center shadow-lg" title="Ninja SBA">
+                    🥷
+                </div>
+            </div>
+
+            <!-- Title & Bio -->
+            <h1 class="font-game text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-3">
+                ¡Hola, soy <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-light via-purple-bright to-purple-glow text-glow">Nervik</span>!
+                <i class="fa-solid fa-circle-check text-purple-bright text-3xl sm:text-5xl align-middle" title="Verificado"></i>
+            </h1>
+
+            <p class="text-purple-light text-lg sm:text-2xl font-light max-w-2xl mb-8 leading-relaxed">
+                Hago <span class="font-semibold text-white">informes de SBA</span>, los premios <span class="font-semibold text-white">SBA Awards</span> y <span class="font-semibold text-white">minijuegos con Nervika</span>.
+            </p>
+
+            <!-- Main CTA Button to YouTube -->
+            <a href="https://www.youtube.com/@nervikisoficial/videos" target="_blank" rel="noopener noreferrer" 
+               class="px-8 py-4 rounded-2xl bg-gradient-to-r from-red-600 via-purple-glow to-purple-bright hover:opacity-95 text-white font-game text-xl tracking-wider shadow-2xl shadow-purple-glow/50 hover:scale-105 transition-all flex items-center gap-3">
+                <i class="fa-brands fa-youtube text-2xl"></i>
+                Ver mi canal de YouTube
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats & Social Links Section -->
+    <section id="cifras" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-game text-3xl md:text-5xl font-bold text-glow mb-3">Cifras y Redes Sociales</h2>
+            <p class="text-purple-light max-w-lg mx-auto">Únete a nuestra creciente comunidad en todas las plataformas.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- YouTube Card -->
+            <a href="https://www.youtube.com/@nervikisoficial/videos" target="_blank" rel="noopener noreferrer" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center group">
+                <div class="w-16 h-16 rounded-2xl bg-red-600/20 text-red-500 border border-red-500/30 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+                <h3 class="font-game text-3xl font-extrabold text-white mb-1">108 mil</h3>
+                <p class="text-sm font-semibold text-red-400 mb-2">Suscriptores en YouTube</p>
+                <span class="text-xs text-purple-light underline flex items-center gap-1">
+                    Ir al canal <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </span>
+            </a>
+
+            <!-- TikTok Card -->
+            <a href="https://www.tiktok.com/@nervikisoficial" target="_blank" rel="noopener noreferrer" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center group">
+                <div class="w-16 h-16 rounded-2xl bg-fuchsia-600/20 text-fuchsia-400 border border-fuchsia-500/30 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <h3 class="font-game text-3xl font-extrabold text-white mb-1">TikTok</h3>
+                <p class="text-sm font-semibold text-fuchsia-300 mb-2">Seguidores en TikTok</p>
+                <span class="text-xs text-purple-light underline flex items-center gap-1">
+                    Ver perfil <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </span>
+            </a>
+
+            <!-- Discord Card -->
+            <a href="https://discord.gg/bTbwbTHSG" target="_blank" rel="noopener noreferrer" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center group">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-discord"></i>
+                </div>
+                <h3 class="font-game text-3xl font-extrabold text-white mb-1">Discord</h3>
+                <p class="text-sm font-semibold text-indigo-300 mb-2">Servidor de la Comunidad</p>
+                <span class="text-xs text-purple-light underline flex items-center gap-1">
+                    Unirme ahora <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </span>
+            </a>
+
+            <!-- Total Community Card -->
+            <div class="glass-card p-6 rounded-3xl flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-2xl bg-purple-glow/20 text-purple-bright border border-purple-glow/30 flex items-center justify-center text-3xl mb-4">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h3 class="font-game text-3xl font-extrabold text-white mb-1">+100k</h3>
+                <p class="text-sm font-semibold text-purple-light mb-2">Fans en la comunidad SBA 🚀</p>
+                <span class="text-xs text-purple-light opacity-80">¡Gracias por el apoyo!</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section id="videos" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-game text-3xl md:text-5xl font-bold text-glow mb-3">Vídeos Destacados</h2>
+            <p class="text-purple-light max-w-lg mx-auto">Disfruta de mi contenido más reciente y el vídeo más popular del canal.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Video 1: Último Vídeo -->
+            <div class="glass-card rounded-3xl overflow-hidden flex flex-col">
+                <div class="relative h-60 w-full bg-gradient-to-tr from-purple-base via-purple-deep to-purple-bright flex items-center justify-center border-b border-purple-800/40 p-6 text-center">
+                    <!-- Neon Backdrop Art for Video Thumbnail -->
+                    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#8A2BE2_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    
+                    <div class="relative z-10 flex flex-col items-center">
+                        <button onclick="openVideoModal('https://www.youtube.com/embed/videoseries?list=PL4fGSI1p3p7g_nervik_latest')" 
+                                class="w-20 h-20 rounded-full bg-red-600 text-white flex items-center justify-center text-3xl shadow-2xl shadow-red-600/60 hover:scale-110 transition-transform cursor-pointer mb-3">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </button>
+                        <span class="bg-purple-base/80 text-purple-light px-4 py-1 rounded-full text-xs font-semibold border border-purple-bright/40">
+                            Último Vídeo
+                        </span>
+                    </div>
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-game text-2xl font-bold text-white mb-2">
+                            Mini Actualización 13.0.8 y Novedades SBA
+                        </h3>
+                        <p class="text-sm text-purple-light mb-4">
+                            Revisamos todos los cambios, correcciones y sorpresas escondidas en la última versión de Super Bear Adventure.
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="https://www.youtube.com/@nervikisoficial/videos" target="_blank" rel="noopener noreferrer" 
+                           class="flex-1 py-3 rounded-xl bg-purple-glow/30 hover:bg-purple-glow/50 text-white font-semibold text-center text-sm border border-purple-glow/40 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-youtube text-red-500"></i> Ver en YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 2: Vídeo más visto -->
+            <div class="glass-card rounded-3xl overflow-hidden flex flex-col">
+                <div class="relative h-60 w-full bg-gradient-to-tr from-purple-base via-purple-bright to-fuchsia-900 flex items-center justify-center border-b border-purple-800/40 p-6 text-center">
+                    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#9932CC_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    
+                    <div class="relative z-10 flex flex-col items-center">
+                        <button onclick="openVideoModal('https://www.youtube.com/embed/videoseries?list=PL4fGSI1p3p7g_nervik_mostviewed')" 
+                                class="w-20 h-20 rounded-full bg-red-600 text-white flex items-center justify-center text-3xl shadow-2xl shadow-red-600/60 hover:scale-110 transition-transform cursor-pointer mb-3">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </button>
+                        <span class="bg-purple-base/80 text-amber-300 px-4 py-1 rounded-full text-xs font-semibold border border-amber-500/40">
+                            🏆 Más Visto
+                        </span>
+                    </div>
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-game text-2xl font-bold text-white mb-2">
+                            SBA Awards / Informes de Super Bear Adventure
+                        </h3>
+                        <p class="text-sm text-purple-light mb-4">
+                            El gran evento de la comunidad donde se otorgan los galardones más épicos e importantes del año.
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="https://www.youtube.com/@nervikisoficial/videos" target="_blank" rel="noopener noreferrer" 
+                           class="flex-1 py-3 rounded-xl bg-purple-glow/30 hover:bg-purple-glow/50 text-white font-semibold text-center text-sm border border-purple-glow/40 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-youtube text-red-500"></i> Ver en YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section id="contenido" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-game text-3xl md:text-5xl font-bold text-glow mb-3">Contenido que Hago</h2>
+            <p class="text-purple-light max-w-lg mx-auto">Los pilares fundamentales de mi canal de YouTube.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Pillar 1 -->
+            <div class="glass-card p-8 rounded-3xl flex flex-col items-center text-center relative overflow-hidden group">
+                <span class="font-game text-6xl font-black text-purple-bright/20 absolute -top-2 -right-2">01</span>
+                <div class="w-16 h-16 rounded-2xl bg-purple-glow/20 text-purple-light border border-purple-glow/40 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-newspaper"></i>
+                </div>
+                <h3 class="font-game text-2xl font-bold text-white mb-3">Informes de SBA</h3>
+                <p class="text-sm text-purple-light leading-relaxed">
+                    Noticias de última hora, filtraciones verificadas, secretos ocultos e información oficial del juego Super Bear Adventure.
+                </p>
+            </div>
+
+            <!-- Pillar 2 -->
+            <div class="glass-card p-8 rounded-3xl flex flex-col items-center text-center relative overflow-hidden group">
+                <span class="font-game text-6xl font-black text-amber-500/20 absolute -top-2 -right-2">02</span>
+                <div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="font-game text-2xl font-bold text-white mb-3">SBA Awards</h3>
+                <p class="text-sm text-purple-light leading-relaxed">
+                    La gala anual más grande donde premiamos a los mejores creadores, mapas, momentos y estrellas de la comunidad SBA.
+                </p>
+            </div>
+
+            <!-- Pillar 3 -->
+            <div class="glass-card p-8 rounded-3xl flex flex-col items-center text-center relative overflow-hidden group">
+                <span class="font-game text-6xl font-black text-fuchsia-500/20 absolute -top-2 -right-2">03</span>
+                <div class="w-16 h-16 rounded-2xl bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/40 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <h3 class="font-game text-2xl font-bold text-white mb-3">Minijuegos con Nervika</h3>
+                <p class="text-sm text-purple-light leading-relaxed">
+                    Retos divertidos, pruebas extremas, carreras y momentos de risas compartidos junto a Nervika.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="sobre-mi" class="py-16 px-4 max-w-5xl mx-auto">
+        <div class="glass-panel p-8 sm:p-12 rounded-3xl border border-purple-glow/30">
+            <div class="text-center md:text-left md:flex items-center gap-10">
+                
+                <!-- Avatar Graphic for About Me -->
+                <div class="shrink-0 mb-8 md:mb-0 flex justify-center">
+                    <div class="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl bg-purple-base border-2 border-purple-glow p-2 shadow-xl shadow-purple-glow/30 flex items-center justify-center overflow-hidden">
+                        <svg class="w-full h-full" viewBox="0 0 200 200" fill="none">
+                            <rect width="200" height="200" rx="20" fill="#120024"/>
+                            <circle cx="100" cy="80" r="45" fill="#8A2BE2"/>
+                            <!-- Ninja Mask -->
+                            <rect x="60" y="65" width="80" height="25" rx="6" fill="#120024"/>
+                            <circle cx="80" cy="77" r="5" fill="#00ffff"/>
+                            <circle cx="120" cy="77" r="5" fill="#00ffff"/>
+                            <path d="M 40 180 Q 100 130 160 180 Z" fill="#9932CC"/>
+                            <path d="M 50 140 Q 100 160 150 140" stroke="#ff9900" stroke-width="8"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <h2 class="font-game text-3xl sm:text-5xl font-bold text-glow mb-4">Sobre Mí</h2>
+                    <p class="text-purple-light text-base sm:text-lg leading-relaxed mb-6">
+                        Me llamo <strong class="text-white">Iker Rodríguez</strong>, tengo actualmente <strong class="text-white">16 años</strong> y vivo en <strong class="text-white">España 🇪🇸</strong>. 
+                        Me gusta cantar, bailar e interpretar a parte de hacer vídeos. Empecé en YouTube en <strong class="text-white">2024</strong> y aún espero seguir creciendo junto a todos ustedes.
+                    </p>
+
+                    <!-- Likes & Dislikes Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        <!-- Likes Card -->
+                        <div class="bg-purple-deep/40 p-5 rounded-2xl border border-purple-glow/30">
+                            <h4 class="font-bold text-emerald-400 text-base mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-thumbs-up"></i> Lo que me gusta:
+                            </h4>
+                            <ul class="space-y-1.5 text-purple-light">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Programar juegos</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Cantar</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Bailar e Interpretar</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> El Inglés</li>
+                            </ul>
+                        </div>
+
+                        <!-- Dislikes Card -->
+                        <div class="bg-purple-deep/40 p-5 rounded-2xl border border-red-500/30">
+                            <h4 class="font-bold text-red-400 text-base mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-ban"></i> Lo que NO me gusta:
+                            </h4>
+                            <ul class="space-y-1.5 text-purple-light">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-xmark text-red-400 text-xs"></i> Bullying</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-xmark text-red-400 text-xs"></i> Racismo</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-xmark text-red-400 text-xs"></i> Homofobia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Projects Section -->
+    <section id="proyectos" class="py-16 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-game text-3xl md:text-5xl font-bold text-glow mb-3">Proyectos Futuros</h2>
+            <p class="text-purple-light max-w-lg mx-auto">Lo que se viene muy pronto en el canal y la comunidad.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Project 1 -->
+            <div class="glass-card p-8 rounded-3xl border border-purple-bright/30 flex flex-col justify-between">
+                <div>
+                    <div class="w-14 h-14 rounded-2xl bg-fuchsia-600/20 text-fuchsia-400 border border-fuchsia-500/30 flex items-center justify-center text-2xl mb-5">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3 class="font-game text-2xl font-bold text-white mb-2">Vídeos con Nervika</h3>
+                    <p class="text-sm text-purple-light leading-relaxed">
+                        Nuevas dinámicas especiales, minijuegos desafiantes y colaboraciones llenas de entretenimiento.
+                    </p>
+                </div>
+                <span class="mt-6 inline-block text-xs font-semibold text-fuchsia-300 bg-fuchsia-950/60 px-3 py-1.5 rounded-full w-fit">
+                    ⏳ En desarrollo
+                </span>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="glass-card p-8 rounded-3xl border border-amber-500/30 flex flex-col justify-between">
+                <div>
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-2xl mb-5">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h3 class="font-game text-2xl font-bold text-white mb-2">Mini SBA Awards 2027</h3>
+                    <p class="text-sm text-purple-light leading-relaxed">
+                        Una versión especial renovada para premiar el contenido de la comunidad en el año 2027.
+                    </p>
+                </div>
+                <span class="mt-6 inline-block text-xs font-semibold text-amber-300 bg-amber-950/60 px-3 py-1.5 rounded-full w-fit">
+                    🏆 Confirmado
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- YouTuber Friends Section -->
+    <section id="amigos" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-game text-3xl md:text-5xl font-bold text-glow mb-3">Amigos Youtubers</h2>
+            <p class="text-purple-light max-w-lg mx-auto">Creadores de contenido geniales con los que comparto el amor por SBA.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <!-- Friend 1: PekitaVmo -->
+            <a href="https://www.youtube.com/@PekitaVmo" target="_blank" rel="noopener noreferrer" 
+               class="glass-card p-8 rounded-3xl flex flex-col items-center text-center group">
+                <div class="w-28 h-28 rounded-full border-4 border-purple-glow p-1 bg-purple-base mb-5 shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+                    <!-- Clean SVG Illustrated Avatar for PekitaVmo -->
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="48" fill="#1a0b2e"/>
+                        <circle cx="30" cy="25" r="12" fill="#e879f9"/>
+                        <circle cx="70" cy="25" r="12" fill="#e879f9"/>
+                        <circle cx="50" cy="55" r="32" fill="#c084fc"/>
+                        <circle cx="40" cy="50" r="4" fill="#ffffff"/>
+                        <circle cx="60" cy="50" r="4" fill="#ffffff"/>
+                        <ellipse cx="50" cy="62" rx="8" ry="5" fill="#581c87"/>
+                    </svg>
+                </div>
+                <h3 class="font-game text-2xl font-bold text-white mb-1 group-hover:text-purple-light transition-colors">
+                    PekitaVmo
+                </h3>
+                <span class="text-xs text-purple-light mb-4">YouTuber de SBA</span>
+                <span class="px-4 py-2 rounded-xl bg-purple-glow/30 text-white font-semibold text-xs border border-purple-glow/40 group-hover:bg-purple-glow transition-colors">
+                    Visitar Canal <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                </span>
+            </a>
+
+            <!-- Friend 2: Dixon -->
+            <a href="https://www.youtube.com/@DixonSBA" target="_blank" rel="noopener noreferrer" 
+               class="glass-card p-8 rounded-3xl flex flex-col items-center text-center group">
+                <div class="w-28 h-28 rounded-full border-4 border-purple-bright p-1 bg-purple-base mb-5 shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+                    <!-- Clean SVG Illustrated Avatar for Dixon -->
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="48" fill="#1a0b2e"/>
+                        <circle cx="30" cy="25" r="12" fill="#60a5fa"/>
+                        <circle cx="70" cy="25" r="12" fill="#60a5fa"/>
+                        <circle cx="50" cy="55" r="32" fill="#3b82f6"/>
+                        <circle cx="40" cy="50" r="4" fill="#ffffff"/>
+                        <circle cx="60" cy="50" r="4" fill="#ffffff"/>
+                        <ellipse cx="50" cy="62" rx="8" ry="5" fill="#1e3a8a"/>
+                    </svg>
+                </div>
+                <h3 class="font-game text-2xl font-bold text-white mb-1 group-hover:text-purple-light transition-colors">
+                    Dixon
+                </h3>
+                <span class="text-xs text-purple-light mb-4">YouTuber de SBA</span>
+                <span class="px-4 py-2 rounded-xl bg-purple-glow/30 text-white font-semibold text-xs border border-purple-glow/40 group-hover:bg-purple-glow transition-colors">
+                    Visitar Canal <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                </span>
+            </a>
+
+            <!-- Friend 3: Nervika -->
+            <a href="https://www.youtube.com/@Nervikaoficial" target="_blank" rel="noopener noreferrer" 
+               class="glass-card p-8 rounded-3xl flex flex-col items-center text-center group">
+                <div class="w-28 h-28 rounded-full border-4 border-fuchsia-500 p-1 bg-purple-base mb-5 shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+                    <!-- Clean SVG Illustrated Avatar for Nervika -->
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="48" fill="#2e0b2a"/>
+                        <circle cx="30" cy="25" r="12" fill="#f43f5e"/>
+                        <circle cx="70" cy="25" r="12" fill="#f43f5e"/>
+                        <circle cx="50" cy="55" r="32" fill="#e11d48"/>
+                        <circle cx="40" cy="50" r="4" fill="#ffffff"/>
+                        <circle cx="60" cy="50" r="4" fill="#ffffff"/>
+                        <path d="M 65 30 L 75 20 M 75 30 L 65 20" stroke="#f43f5e" stroke-width="3"/>
+                        <ellipse cx="50" cy="62" rx="8" ry="5" fill="#881337"/>
+                    </svg>
+                </div>
+                <h3 class="font-game text-2xl font-bold text-white mb-1 group-hover:text-fuchsia-300 transition-colors">
+                    Nervika
+                </h3>
+                <span class="text-xs text-fuchsia-300 mb-4">Colaboradora de SBA</span>
+                <span class="px-4 py-2 rounded-xl bg-fuchsia-600/30 text-white font-semibold text-xs border border-fuchsia-500/40 group-hover:bg-fuchsia-600 transition-colors">
+                    Visitar Canal <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="py-16 px-4 max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+            <h2 class="font-game text-3xl md:text-5xl font-bold text-glow mb-3">Contacto</h2>
+            <p class="text-purple-light max-w-lg mx-auto">¿Tienes preguntas, ideas o un saludo para mí?</p>
+        </div>
+
+        <div class="glass-card p-8 sm:p-12 rounded-3xl text-center border border-purple-glow/40 flex flex-col items-center">
+            <div class="w-20 h-20 rounded-full bg-purple-glow/20 text-purple-bright border border-purple-glow/40 flex items-center justify-center text-4xl mb-6">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <h3 class="font-game text-2xl font-bold text-white mb-2">Contacto para Fans y Mensajes</h3>
+            <p class="text-purple-light mb-8 max-w-md">Puedes escribirme directamente a mi correo electrónico personal:</p>
+
+            <a href="mailto:nervikelgg2@gmail.com" 
+               class="px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-glow to-purple-bright hover:opacity-95 text-white font-game text-lg tracking-wider shadow-2xl shadow-purple-glow/50 hover:scale-105 transition-all inline-flex items-center gap-3">
+                <i class="fa-solid fa-paper-plane"></i>
+                nervikelgg2@gmail.com
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 text-center text-xs text-purple-light border-t border-purple-800/30">
+        <p class="mb-2">© 2026 Nervik. Todos los derechos reservados. Super Bear Adventure Community.</p>
+        <p>Página creada para la comunidad oficial de Nervik.</p>
+    </footer>
+
+    <!-- Video Modal Container -->
+    <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl bg-purple-base rounded-3xl border border-purple-glow overflow-hidden shadow-2xl">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-purple-deep text-white flex items-center justify-center text-lg hover:bg-red-600 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="aspect-video w-full">
+                <iframe id="modal-iframe" class="w-full h-full" src="" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Navigation Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            });
+        });
+
+        // Video Modal Logic
+        const modal = document.getElementById('video-modal');
+        const iframe = document.getElementById('modal-iframe');
+
+        function openVideoModal(url) {
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            iframe.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeVideoModal();
+            }
+        });
+
+        // Canvas Neon Glowing Floating Particles
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = -Math.random() * 0.5 - 0.2;
+                this.opacity = Math.random() * 0.8 + 0.2;
+                this.color = Math.random() > 0.5 ? '#8A2BE2' : '#9932CC';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+                    this.reset();
+                    this.y = canvas.height;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(Math.floor(window.innerWidth / 12), 70);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.onload = function() {
+            initParticles();
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
